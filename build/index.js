@@ -2465,7 +2465,7 @@ var Spot = function (_PureComponent) {
   _createClass(Spot, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy, r: this.props.spotRadius, style: _extends({}, this.props.style) });
+      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy + this.props.cyOffset, r: this.props.spotRadius, style: _extends({}, this.props.style) });
     }
   }]);
 
@@ -2473,7 +2473,8 @@ var Spot = function (_PureComponent) {
 }(_react.PureComponent);
 
 Spot.defaultProps = {
-  spotRadius: 2
+  spotRadius: 2,
+  cyOffset: 0
 };
 
 var Cursor = function (_PureComponent2) {
@@ -2596,7 +2597,8 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
           svgHeight = _props.svgHeight,
           cursorStyle = _props.cursorStyle,
           spotStyle = _props.spotStyle,
-          spotRadius = _props.spotRadius;
+          spotRadius = _props.spotRadius,
+          cyOffset = _props.cyOffset;
       var points = this.props.points;
 
       if (!points && data.length === 0) return null;
@@ -2615,7 +2617,7 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       return _react2.default.createElement(
         'svg',
         svgOpts,
-        _react2.default.createElement(Spot, { cx: cx, cy: cy, style: spotStyle, spotRadius: spotRadius }),
+        _react2.default.createElement(Spot, { cx: cx, cy: cy, style: spotStyle, spotRadius: spotRadius, cyOffset: cyOffset }),
         _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: svgHeight, style: cursorStyle }),
         _react2.default.createElement('rect', {
           ref: function ref(_ref) {

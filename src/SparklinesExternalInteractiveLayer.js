@@ -4,12 +4,13 @@ import React, { PureComponent } from 'react';
 
 class Spot extends PureComponent {
 	static defaultProps = {
-		spotRadius: 2
+		spotRadius: 2,
+		cyOffset: 0
 	}
   
   render() {
     return (
-      <circle cx={this.props.cx} cy={this.props.cy} r={this.props.spotRadius} style={{...this.props.style}}/>
+      <circle cx={this.props.cx} cy={this.props.cy + this.props.cyOffset} r={this.props.spotRadius} style={{...this.props.style}}/>
     )
   }
 }
@@ -120,7 +121,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
   }
 
   render() {
-    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, cursorStyle, spotStyle, spotRadius } = this.props;
+    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, cursorStyle, spotStyle, spotRadius, cyOffset } = this.props;
 
 		let { points } = this.props;
     if (!points && data.length === 0) return null;
@@ -135,7 +136,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
 
     return (
     	<svg {...svgOpts}>
-	      <Spot cx={cx} cy={cy} style={spotStyle} spotRadius={spotRadius}/>
+	      <Spot cx={cx} cy={cy} style={spotStyle} spotRadius={spotRadius} cyOffset={cyOffset}/>
 	      <Cursor x1={cx} x2={cx} height={svgHeight} style={cursorStyle}/>
 	      <rect
 	        ref={((_ref) => {this.rect = _ref})}
