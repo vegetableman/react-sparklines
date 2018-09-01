@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 class Spot extends PureComponent {
   render() {
     return (
-      <circle cx={this.props.cx} cy={this.props.cy} r={2}/>
+      <circle cx={this.props.cx} cy={this.props.cy} r={2} style={{...this.props.style}}/>
     )
   }
 }
@@ -13,7 +13,7 @@ class Spot extends PureComponent {
 class Cursor extends PureComponent {
   render() {
     return (
-      <line x1={this.props.x1} x2={this.props.x2} y1={0} y2={this.props.height} style={{strokeWidth: 1, stroke: "red"}}/>
+      <line x1={this.props.x1} x2={this.props.x2} y1={0} y2={this.props.height} style={{strokeWidth: 1, stroke: "red", ...this.props.style}}/>
     )
   }
 }
@@ -116,7 +116,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
   }
 
   render() {
-    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight } = this.props;
+    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, cursorStyle, spotStyle } = this.props;
 
 		let { points } = this.props;
     if (!points && data.length === 0) return null;
@@ -131,8 +131,8 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
 
     return (
     	<svg {...svgOpts}>
-	      <Spot cx={cx} cy={cy}/>
-	      <Cursor x1={cx} x2={cx} height={svgHeight}/>
+	      <Spot cx={cx} cy={cy} style={spotStyle}/>
+	      <Cursor x1={cx} x2={cx} height={svgHeight} style={cursorStyle}/>
 	      <rect
 	        ref={((_ref) => {this.rect = _ref})}
 	        height={svgHeight}

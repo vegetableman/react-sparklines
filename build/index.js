@@ -2465,7 +2465,7 @@ var Spot = function (_PureComponent) {
   _createClass(Spot, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy, r: 2 });
+      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy, r: 2, style: _extends({}, this.props.style) });
     }
   }]);
 
@@ -2484,7 +2484,7 @@ var Cursor = function (_PureComponent2) {
   _createClass(Cursor, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('line', { x1: this.props.x1, x2: this.props.x2, y1: 0, y2: this.props.height, style: { strokeWidth: 1, stroke: "red" } });
+      return _react2.default.createElement('line', { x1: this.props.x1, x2: this.props.x2, y1: 0, y2: this.props.height, style: _extends({ strokeWidth: 1, stroke: "red" }, this.props.style) });
     }
   }]);
 
@@ -2589,7 +2589,9 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
           min = _props.min,
           preserveAspectRatio = _props.preserveAspectRatio,
           svgWidth = _props.svgWidth,
-          svgHeight = _props.svgHeight;
+          svgHeight = _props.svgHeight,
+          cursorStyle = _props.cursorStyle,
+          spotStyle = _props.spotStyle;
       var points = this.props.points;
 
       if (!points && data.length === 0) return null;
@@ -2608,8 +2610,8 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       return _react2.default.createElement(
         'svg',
         svgOpts,
-        _react2.default.createElement(Spot, { cx: cx, cy: cy }),
-        _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: svgHeight }),
+        _react2.default.createElement(Spot, { cx: cx, cy: cy, style: spotStyle }),
+        _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: svgHeight, style: cursorStyle }),
         _react2.default.createElement('rect', {
           ref: function ref(_ref) {
             _this4.rect = _ref;
