@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Sparklines, SparklinesBars, SparklinesLine, SparklinesCurve,  SparklinesNormalBand, SparklinesReferenceLine, SparklinesSpots, SparklinesInteractiveLayer } from '../src/Sparklines';
+import { Sparklines, SparklinesBars, SparklinesLine, SparklinesCurve,  SparklinesNormalBand, SparklinesReferenceLine, SparklinesSpots, SparklinesInteractiveLayer, SparklinesExternalInteractiveLayer } from '../src/Sparklines';
 
 function boxMullerRandom () {
     let phase = false,
@@ -333,6 +333,39 @@ class RealWorld10 extends Component {
     }
 }
 
+class RealWorld11 extends Component {
+    state = {
+        showTooltip: false,
+        x: offscreen,
+        y: offscreen,
+    }
+
+    onMouseMove = (point, index, x, y) => {
+        this.setState({
+            showTooltip: true,
+            x: x + 10,
+            y: y - 40
+        })
+    }
+
+    onMouseLeave = () => {
+        this.setState({showTooltip: false, x: offscreen, y: offscreen})
+    }
+
+    render() {
+        const { showTooltip, x, y} = this.state
+        return (
+            <div style={{position: 'relative'}}>
+                <Sparklines data={sampleData} style={{background: '#ccc'}} margin={10} height={40}>
+                    <SparklinesLine style={{ stroke: 'white', fill: 'none' }} />
+                </Sparklines>
+                <SparklinesExternalInteractiveLayer data={sampleData}  margin={10} height={40} svgHeight={80} style={{cursor: 'pointer', position: "absolute", left: 0, top: 0}} onMouseMove={this.onMouseMove} onMouseLeave={this.onMouseLeave}/>
+                <Tooltip showTooltip={showTooltip} x={x} y={y}/>
+            </div>
+        )
+    }
+}
+
 
 const demos = {
     'headersparklines': Header,
@@ -371,7 +404,8 @@ const demos = {
     'realworld7': RealWorld7,
     'realworld8': RealWorld8,
     'realworld9': RealWorld9,
-    'realworld10': RealWorld10
+    'realworld10': RealWorld10,
+    'realworld11': RealWorld11
 };
 
 for (let d in demos) {
