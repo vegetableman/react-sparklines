@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -99,11 +99,11 @@ if (process.env.NODE_ENV !== 'production') {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(11)(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(12)(isValidElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(14)();
+  module.exports = __webpack_require__(15)();
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
@@ -400,17 +400,61 @@ exports.default = function (data) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(9);
+"use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _min = __webpack_require__(5);
+
+var _min2 = _interopRequireDefault(_min);
+
+var _max = __webpack_require__(6);
+
+var _max2 = _interopRequireDefault(_max);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (_ref) {
+    var data = _ref.data,
+        limit = _ref.limit,
+        _ref$width = _ref.width,
+        width = _ref$width === undefined ? 1 : _ref$width,
+        _ref$height = _ref.height,
+        height = _ref$height === undefined ? 1 : _ref$height,
+        _ref$margin = _ref.margin,
+        margin = _ref$margin === undefined ? 0 : _ref$margin,
+        _ref$max = _ref.max,
+        max = _ref$max === undefined ? (0, _max2.default)(data) : _ref$max,
+        _ref$min = _ref.min,
+        min = _ref$min === undefined ? (0, _min2.default)(data) : _ref$min;
+
+
+    var len = data.length;
+
+    if (limit && limit < len) {
+        data = data.slice(len - limit);
+    }
+
+    var vfactor = (height - margin * 2) / (max - min || 2);
+    var hfactor = (width - margin * 2) / ((limit || len) - (len > 1 ? 1 : 0));
+
+    return data.map(function (d, i) {
+        return {
+            x: i * hfactor + margin,
+            y: (max === min ? 1 : max - d) * vfactor + margin
+        };
+    });
+};
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
 module.exports = __webpack_require__(10);
+
 
 /***/ }),
 /* 10 */
@@ -419,10 +463,19 @@ module.exports = __webpack_require__(10);
 "use strict";
 
 
+module.exports = __webpack_require__(11);
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.SparklinesInteractiveLayer = exports.SparklinesText = exports.SparklinesNormalBand = exports.SparklinesReferenceLine = exports.SparklinesSpots = exports.SparklinesBars = exports.SparklinesCurve = exports.SparklinesLine = exports.Sparklines = undefined;
+exports.dataToPoints = exports.SparklinesExternalInteractiveLayer = exports.SparklinesInteractiveLayer = exports.SparklinesText = exports.SparklinesNormalBand = exports.SparklinesReferenceLine = exports.SparklinesSpots = exports.SparklinesBars = exports.SparklinesCurve = exports.SparklinesLine = exports.Sparklines = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -434,41 +487,45 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _SparklinesText = __webpack_require__(15);
+var _SparklinesText = __webpack_require__(16);
 
 var _SparklinesText2 = _interopRequireDefault(_SparklinesText);
 
-var _SparklinesLine = __webpack_require__(16);
+var _SparklinesLine = __webpack_require__(17);
 
 var _SparklinesLine2 = _interopRequireDefault(_SparklinesLine);
 
-var _SparklinesCurve = __webpack_require__(17);
+var _SparklinesCurve = __webpack_require__(18);
 
 var _SparklinesCurve2 = _interopRequireDefault(_SparklinesCurve);
 
-var _SparklinesBars = __webpack_require__(18);
+var _SparklinesBars = __webpack_require__(19);
 
 var _SparklinesBars2 = _interopRequireDefault(_SparklinesBars);
 
-var _SparklinesSpots = __webpack_require__(19);
+var _SparklinesSpots = __webpack_require__(20);
 
 var _SparklinesSpots2 = _interopRequireDefault(_SparklinesSpots);
 
-var _SparklinesReferenceLine = __webpack_require__(20);
+var _SparklinesReferenceLine = __webpack_require__(21);
 
 var _SparklinesReferenceLine2 = _interopRequireDefault(_SparklinesReferenceLine);
 
-var _SparklinesNormalBand = __webpack_require__(25);
+var _SparklinesNormalBand = __webpack_require__(26);
 
 var _SparklinesNormalBand2 = _interopRequireDefault(_SparklinesNormalBand);
 
-var _dataToPoints = __webpack_require__(26);
+var _dataToPoints = __webpack_require__(8);
 
 var _dataToPoints2 = _interopRequireDefault(_dataToPoints);
 
 var _SparklinesInteractiveLayer = __webpack_require__(27);
 
 var _SparklinesInteractiveLayer2 = _interopRequireDefault(_SparklinesInteractiveLayer);
+
+var _SparklinesExternalInteractiveLayer = __webpack_require__(28);
+
+var _SparklinesExternalInteractiveLayer2 = _interopRequireDefault(_SparklinesExternalInteractiveLayer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -502,11 +559,14 @@ var Sparklines = function (_PureComponent) {
                 style = _props.style,
                 max = _props.max,
                 min = _props.min;
+            var points = this.props.points;
 
 
-            if (data.length === 0) return null;
+            if (!points && data.length === 0) return null;
 
-            var points = (0, _dataToPoints2.default)({ data: data, limit: limit, width: width, height: height, margin: margin, max: max, min: min });
+            if (!points) {
+                points = points || (0, _dataToPoints2.default)({ data: data, limit: limit, width: width, height: height, margin: margin, max: max, min: min });
+            }
 
             var svgOpts = { style: style, viewBox: '0 0 ' + width + ' ' + height, preserveAspectRatio: preserveAspectRatio };
             if (svgWidth > 0) svgOpts.width = svgWidth;
@@ -556,9 +616,11 @@ exports.SparklinesReferenceLine = _SparklinesReferenceLine2.default;
 exports.SparklinesNormalBand = _SparklinesNormalBand2.default;
 exports.SparklinesText = _SparklinesText2.default;
 exports.SparklinesInteractiveLayer = _SparklinesInteractiveLayer2.default;
+exports.SparklinesExternalInteractiveLayer = _SparklinesExternalInteractiveLayer2.default;
+exports.dataToPoints = _dataToPoints2.default;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -571,10 +633,10 @@ exports.SparklinesInteractiveLayer = _SparklinesInteractiveLayer2.default;
 
 
 
-var assign = __webpack_require__(12);
+var assign = __webpack_require__(13);
 
 var ReactPropTypesSecret = __webpack_require__(4);
-var checkPropTypes = __webpack_require__(13);
+var checkPropTypes = __webpack_require__(14);
 
 var printWarning = function() {};
 
@@ -1121,7 +1183,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1218,7 +1280,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1317,7 +1379,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1383,7 +1445,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1459,7 +1521,7 @@ SparklinesText.defaultProps = {
 exports.default = SparklinesText;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1575,7 +1637,7 @@ SparklinesLine.defaultProps = {
 exports.default = SparklinesLine;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1693,7 +1755,7 @@ SparklinesCurve.defaultProps = {
 exports.default = SparklinesCurve;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1782,7 +1844,7 @@ SparklinesBars.defaultProps = {
 exports.default = SparklinesBars;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1881,7 +1943,7 @@ SparklinesSpots.defaultProps = {
 exports.default = SparklinesSpots;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1901,7 +1963,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _dataProcessing = __webpack_require__(21);
+var _dataProcessing = __webpack_require__(22);
 
 var dataProcessing = _interopRequireWildcard(_dataProcessing);
 
@@ -1962,7 +2024,7 @@ SparklinesReferenceLine.defaultProps = {
 exports.default = SparklinesReferenceLine;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1981,11 +2043,11 @@ var _mean2 = __webpack_require__(2);
 
 var _mean3 = _interopRequireDefault(_mean2);
 
-var _midRange2 = __webpack_require__(22);
+var _midRange2 = __webpack_require__(23);
 
 var _midRange3 = _interopRequireDefault(_midRange2);
 
-var _median2 = __webpack_require__(23);
+var _median2 = __webpack_require__(24);
 
 var _median3 = _interopRequireDefault(_median2);
 
@@ -1993,7 +2055,7 @@ var _stdev2 = __webpack_require__(7);
 
 var _stdev3 = _interopRequireDefault(_stdev2);
 
-var _variance2 = __webpack_require__(24);
+var _variance2 = __webpack_require__(25);
 
 var _variance3 = _interopRequireDefault(_variance2);
 
@@ -2009,7 +2071,7 @@ exports.stdev = _stdev3.default;
 exports.variance = _variance3.default;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2034,7 +2096,7 @@ exports.default = function (data) {
 };
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2051,7 +2113,7 @@ exports.default = function (data) {
 };
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2076,7 +2138,7 @@ exports.default = function (data) {
 };
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2152,59 +2214,6 @@ SparklinesNormalBand.defaultProps = {
     style: { fill: 'red', fillOpacity: .1 }
 };
 exports.default = SparklinesNormalBand;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _min = __webpack_require__(5);
-
-var _min2 = _interopRequireDefault(_min);
-
-var _max = __webpack_require__(6);
-
-var _max2 = _interopRequireDefault(_max);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function (_ref) {
-    var data = _ref.data,
-        limit = _ref.limit,
-        _ref$width = _ref.width,
-        width = _ref$width === undefined ? 1 : _ref$width,
-        _ref$height = _ref.height,
-        height = _ref$height === undefined ? 1 : _ref$height,
-        _ref$margin = _ref.margin,
-        margin = _ref$margin === undefined ? 0 : _ref$margin,
-        _ref$max = _ref.max,
-        max = _ref$max === undefined ? (0, _max2.default)(data) : _ref$max,
-        _ref$min = _ref.min,
-        min = _ref$min === undefined ? (0, _min2.default)(data) : _ref$min;
-
-
-    var len = data.length;
-
-    if (limit && limit < len) {
-        data = data.slice(len - limit);
-    }
-
-    var vfactor = (height - margin * 2) / (max - min || 2);
-    var hfactor = (width - margin * 2) / ((limit || len) - (len > 1 ? 1 : 0));
-
-    return data.map(function (d, i) {
-        return {
-            x: i * hfactor + margin,
-            y: (max === min ? 1 : max - d) * vfactor + margin
-        };
-    });
-};
 
 /***/ }),
 /* 27 */
@@ -2408,6 +2417,236 @@ SparklinesInteractiveLayer.defaultProps = {
   onClick: function onClick() {}
 };
 exports.default = SparklinesInteractiveLayer;
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dataToPoints = __webpack_require__(8);
+
+var _dataToPoints2 = _interopRequireDefault(_dataToPoints);
+
+var _propTypes = __webpack_require__(0);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Spot = function (_PureComponent) {
+  _inherits(Spot, _PureComponent);
+
+  function Spot() {
+    _classCallCheck(this, Spot);
+
+    return _possibleConstructorReturn(this, (Spot.__proto__ || Object.getPrototypeOf(Spot)).apply(this, arguments));
+  }
+
+  _createClass(Spot, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy, r: 2 });
+    }
+  }]);
+
+  return Spot;
+}(_react.PureComponent);
+
+var Cursor = function (_PureComponent2) {
+  _inherits(Cursor, _PureComponent2);
+
+  function Cursor() {
+    _classCallCheck(this, Cursor);
+
+    return _possibleConstructorReturn(this, (Cursor.__proto__ || Object.getPrototypeOf(Cursor)).apply(this, arguments));
+  }
+
+  _createClass(Cursor, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('line', { x1: this.props.x1, x2: this.props.x2, y1: 0, y2: this.props.height, style: { strokeWidth: 1, stroke: "red" } });
+    }
+  }]);
+
+  return Cursor;
+}(_react.PureComponent);
+
+var offscreen = -1000;
+
+var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
+  _inherits(SparklinesExternalInteractiveLayer, _PureComponent3);
+
+  function SparklinesExternalInteractiveLayer(props) {
+    _classCallCheck(this, SparklinesExternalInteractiveLayer);
+
+    var _this3 = _possibleConstructorReturn(this, (SparklinesExternalInteractiveLayer.__proto__ || Object.getPrototypeOf(SparklinesExternalInteractiveLayer)).call(this, props));
+
+    _this3.onMouseMove = function (datapoints, width) {
+      var lastItemIndex = datapoints[datapoints.length - 1];
+      return function (event) {
+        if (_this3.state.isActive) {
+          return;
+        }
+
+        var mouseX = Math.floor(event.nativeEvent.offsetX / (_this3.rectWidth / width));
+
+        var pointIndex = 0;
+        var nextDataPoint = datapoints.find(function (entry) {
+          var match = entry.x >= mouseX;
+          if (match && !pointIndex) {
+            return match;
+          }
+          pointIndex = pointIndex + 1;
+          return match;
+        });
+
+        if (!nextDataPoint) {
+          nextDataPoint = datapoints[lastItemIndex];
+        }
+
+        var previousDataPoint = datapoints[datapoints.indexOf(nextDataPoint) - 1];
+        var currentDataPoint = void 0;
+        var halfway = void 0;
+
+        if (previousDataPoint) {
+          halfway = previousDataPoint.x + (nextDataPoint.x - previousDataPoint.x) / 2;
+          currentDataPoint = mouseX >= halfway ? nextDataPoint : previousDataPoint;
+        } else {
+          currentDataPoint = nextDataPoint;
+        }
+
+        if (!currentDataPoint) return;
+
+        var x = currentDataPoint.x;
+        var y = currentDataPoint.y;
+
+        _this3.setState({ cx: x, cy: y });
+        _this3.props.onMouseMove(currentDataPoint, Math.max(0, pointIndex - 1), event.nativeEvent.offsetX, event.nativeEvent.offsetY);
+      };
+    };
+
+    _this3.onMouseLeave = function () {
+      if (_this3.state.isActive) {
+        return;
+      }
+
+      _this3.setState({ cx: offscreen, cy: offscreen });
+      _this3.props.onMouseLeave();
+    };
+
+    _this3.onClick = function () {
+      _this3.setState(function (prevState) {
+        return { isActive: !prevState.isActive };
+      });
+    };
+
+    _this3.state = {
+      cx: offscreen,
+      cy: offscreen,
+      isActive: false
+    };
+    return _this3;
+  }
+
+  _createClass(SparklinesExternalInteractiveLayer, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.rectWidth = this.rect.getBoundingClientRect().width;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var _props = this.props,
+          height = _props.height,
+          limit = _props.limit,
+          width = _props.width,
+          data = _props.data,
+          style = _props.style,
+          margin = _props.margin,
+          max = _props.max,
+          min = _props.min,
+          preserveAspectRatio = _props.preserveAspectRatio,
+          svgWidth = _props.svgWidth,
+          svgHeight = _props.svgHeight;
+      var points = this.props.points;
+
+      if (!points && data.length === 0) return null;
+
+      if (!points) {
+        points = points || (0, _dataToPoints2.default)({ data: data, limit: limit, width: width, height: height, margin: margin, max: max, min: min });
+      }
+
+      var _state = this.state,
+          cx = _state.cx,
+          cy = _state.cy;
+
+      var svgOpts = { style: style, viewBox: '0 0 ' + width + ' ' + svgHeight, preserveAspectRatio: preserveAspectRatio };
+      if (svgWidth > 0) svgOpts.width = svgWidth;
+
+      return _react2.default.createElement(
+        'svg',
+        svgOpts,
+        _react2.default.createElement(Spot, { cx: cx, cy: cy }),
+        _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: svgHeight }),
+        _react2.default.createElement('rect', {
+          ref: function ref(_ref) {
+            _this4.rect = _ref;
+          },
+          height: svgHeight,
+          width: width,
+          style: _extends({ fill: 'transparent', stroke: 'transparent' }, style),
+          onMouseMove: this.onMouseMove(points, width),
+          onMouseLeave: this.onMouseLeave,
+          onClick: this.onClick
+        })
+      );
+    }
+  }]);
+
+  return SparklinesExternalInteractiveLayer;
+}(_react.PureComponent);
+
+SparklinesExternalInteractiveLayer.propTypes = {
+  points: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  height: _propTypes2.default.number,
+  width: _propTypes2.default.number,
+  onMouseMove: _propTypes2.default.func,
+  onMouseLeave: _propTypes2.default.func,
+  onClick: _propTypes2.default.func
+};
+SparklinesExternalInteractiveLayer.defaultProps = {
+  onMouseMove: function onMouseMove() {},
+  onMouseLeave: function onMouseLeave() {},
+  onClick: function onClick() {},
+  data: [],
+  width: 240,
+  height: 60,
+  preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
+  margin: 2
+};
+exports.default = SparklinesExternalInteractiveLayer;
 
 /***/ })
 /******/ ]);
