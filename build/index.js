@@ -422,7 +422,7 @@ module.exports = __webpack_require__(10);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.SparklinesText = exports.SparklinesNormalBand = exports.SparklinesReferenceLine = exports.SparklinesSpots = exports.SparklinesBars = exports.SparklinesCurve = exports.SparklinesLine = exports.Sparklines = undefined;
+exports.SparklinesInteractiveLayer = exports.SparklinesText = exports.SparklinesNormalBand = exports.SparklinesReferenceLine = exports.SparklinesSpots = exports.SparklinesBars = exports.SparklinesCurve = exports.SparklinesLine = exports.Sparklines = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -501,8 +501,7 @@ var Sparklines = function (_PureComponent) {
                 margin = _props.margin,
                 style = _props.style,
                 max = _props.max,
-                min = _props.min,
-                interactive = _props.interactive;
+                min = _props.min;
 
 
             if (data.length === 0) return null;
@@ -518,8 +517,7 @@ var Sparklines = function (_PureComponent) {
                 svgOpts,
                 _react2.default.Children.map(this.props.children, function (child) {
                     return _react2.default.cloneElement(child, { data: data, points: points, width: width, height: height, margin: margin });
-                }),
-                interactive ? _react2.default.createElement(_SparklinesInteractiveLayer2.default, { width: width, height: height, points: points }) : null
+                })
             );
         }
     }]);
@@ -547,8 +545,7 @@ Sparklines.defaultProps = {
     height: 60,
     //Scale the graphic content of the given element non-uniformly if necessary such that the element's bounding box exactly matches the viewport rectangle.
     preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
-    margin: 2,
-    interactive: false
+    margin: 2
 };
 exports.Sparklines = Sparklines;
 exports.SparklinesLine = _SparklinesLine2.default;
@@ -558,6 +555,7 @@ exports.SparklinesSpots = _SparklinesSpots2.default;
 exports.SparklinesReferenceLine = _SparklinesReferenceLine2.default;
 exports.SparklinesNormalBand = _SparklinesNormalBand2.default;
 exports.SparklinesText = _SparklinesText2.default;
+exports.SparklinesInteractiveLayer = _SparklinesInteractiveLayer2.default;
 
 /***/ }),
 /* 11 */
@@ -2219,6 +2217,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _propTypes = __webpack_require__(0);
@@ -2237,22 +2237,71 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SparklinesInteractiveLayer = function (_PureComponent) {
-  _inherits(SparklinesInteractiveLayer, _PureComponent);
+var Spot = function (_PureComponent) {
+  _inherits(Spot, _PureComponent);
+
+  function Spot() {
+    _classCallCheck(this, Spot);
+
+    return _possibleConstructorReturn(this, (Spot.__proto__ || Object.getPrototypeOf(Spot)).apply(this, arguments));
+  }
+
+  _createClass(Spot, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy, r: 2 });
+    }
+  }]);
+
+  return Spot;
+}(_react.PureComponent);
+
+var Cursor = function (_PureComponent2) {
+  _inherits(Cursor, _PureComponent2);
+
+  function Cursor() {
+    _classCallCheck(this, Cursor);
+
+    return _possibleConstructorReturn(this, (Cursor.__proto__ || Object.getPrototypeOf(Cursor)).apply(this, arguments));
+  }
+
+  _createClass(Cursor, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('line', { x1: this.props.x1, x2: this.props.x2, y1: 0, y2: this.props.height, style: { strokeWidth: 1, stroke: "red" } });
+    }
+  }]);
+
+  return Cursor;
+}(_react.PureComponent);
+
+var offscreen = -1000;
+
+var SparklinesInteractiveLayer = function (_PureComponent3) {
+  _inherits(SparklinesInteractiveLayer, _PureComponent3);
 
   function SparklinesInteractiveLayer(props) {
     _classCallCheck(this, SparklinesInteractiveLayer);
 
-    var _this = _possibleConstructorReturn(this, (SparklinesInteractiveLayer.__proto__ || Object.getPrototypeOf(SparklinesInteractiveLayer)).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (SparklinesInteractiveLayer.__proto__ || Object.getPrototypeOf(SparklinesInteractiveLayer)).call(this, props));
 
-    _this.onMouseMove = function (datapoints) {
+    _this3.onMouseMove = function (datapoints, width) {
       var lastItemIndex = datapoints[datapoints.length - 1];
       return function (event) {
-        var mouseX = event.nativeEvent.offsetX;
-        console.log('movementX: ', event.nativeEvent.movementX);
+        if (_this3.state.isActive) {
+          return;
+        }
 
+        var mouseX = Math.floor(event.nativeEvent.offsetX / (_this3.rectWidth / width));
+
+        var pointIndex = 0;
         var nextDataPoint = datapoints.find(function (entry) {
-          return entry.x >= mouseX;
+          var match = entry.x >= mouseX;
+          if (match && !pointIndex) {
+            return match;
+          }
+          pointIndex = pointIndex + 1;
+          return match;
         });
 
         if (!nextDataPoint) {
@@ -2275,36 +2324,68 @@ var SparklinesInteractiveLayer = function (_PureComponent) {
         var x = currentDataPoint.x;
         var y = currentDataPoint.y;
 
-        console.log('x:', x, 'y: ', y);
-
-        // spot.setAttribute("cx", x);
-        // spot.setAttribute("cy", y);
-
-        // cursor.setAttribute("x1", x);
-        // cursor.setAttribute("x2", x);
+        _this3.setState({ cx: x, cy: y });
+        _this3.props.onMouseMove(currentDataPoint, Math.max(0, pointIndex - 1), event.nativeEvent.offsetX, event.nativeEvent.offsetY);
       };
     };
 
-    return _this;
+    _this3.onMouseLeave = function () {
+      if (_this3.state.isActive) {
+        return;
+      }
+
+      _this3.setState({ cx: offscreen, cy: offscreen });
+      _this3.props.onMouseLeave();
+    };
+
+    _this3.onClick = function () {
+      _this3.setState(function (prevState) {
+        return { isActive: !prevState.isActive };
+      });
+    };
+
+    _this3.state = {
+      cx: offscreen,
+      cy: offscreen,
+      isActive: false
+    };
+    return _this3;
   }
 
   _createClass(SparklinesInteractiveLayer, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.rectWidth = this.rect.getBoundingClientRect().width;
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this4 = this;
+
       var _props = this.props,
           height = _props.height,
           width = _props.width,
-          points = _props.points;
+          points = _props.points,
+          style = _props.style;
+      var _state = this.state,
+          cx = _state.cx,
+          cy = _state.cy;
 
-      console.log('points :', points);
       return _react2.default.createElement(
-        'span',
+        _react2.default.Fragment,
         null,
+        _react2.default.createElement(Spot, { cx: cx, cy: cy }),
+        _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: height }),
         _react2.default.createElement('rect', {
+          ref: function ref(_ref) {
+            _this4.rect = _ref;
+          },
           height: height,
           width: width,
-          style: { fill: "transparent", stroke: "transparent" },
-          onMouseMove: this.onMouseMove(points)
+          style: _extends({ fill: 'transparent', stroke: 'transparent' }, style),
+          onMouseMove: this.onMouseMove(points, width),
+          onMouseLeave: this.onMouseLeave,
+          onClick: this.onClick
         })
       );
     }
@@ -2313,6 +2394,19 @@ var SparklinesInteractiveLayer = function (_PureComponent) {
   return SparklinesInteractiveLayer;
 }(_react.PureComponent);
 
+SparklinesInteractiveLayer.propTypes = {
+  points: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  height: _propTypes2.default.number,
+  width: _propTypes2.default.number,
+  onMouseMove: _propTypes2.default.func,
+  onMouseLeave: _propTypes2.default.func,
+  onClick: _propTypes2.default.func
+};
+SparklinesInteractiveLayer.defaultProps = {
+  onMouseMove: function onMouseMove() {},
+  onMouseLeave: function onMouseLeave() {},
+  onClick: function onClick() {}
+};
 exports.default = SparklinesInteractiveLayer;
 
 /***/ })
