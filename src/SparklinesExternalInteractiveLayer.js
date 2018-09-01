@@ -116,10 +116,14 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
   }
 
   render() {
-    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, } = this.props;
-    
-    if (data.length === 0) return null;
-    const points = dataToPoints({ data, limit, width, height, margin, max, min });
+    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight } = this.props;
+
+		let { points } = this.props;
+    if (!points && data.length === 0) return null;
+
+    if (!points) {
+        points = points || dataToPoints({ data, limit, width, height, margin, max, min });
+    }
     
     const { cx, cy } = this.state;
     const svgOpts = { style: style, viewBox: `0 0 ${width} ${svgHeight}`, preserveAspectRatio: preserveAspectRatio };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Sparklines, SparklinesBars, SparklinesLine, SparklinesCurve,  SparklinesNormalBand, SparklinesReferenceLine, SparklinesSpots, SparklinesInteractiveLayer, SparklinesExternalInteractiveLayer } from '../src/Sparklines';
+import { Sparklines, SparklinesBars, SparklinesLine, SparklinesCurve,  SparklinesNormalBand, SparklinesReferenceLine, SparklinesSpots, SparklinesInteractiveLayer, SparklinesExternalInteractiveLayer, dataToPoints } from '../src/Sparklines';
 
 function boxMullerRandom () {
     let phase = false,
@@ -354,12 +354,13 @@ class RealWorld11 extends Component {
 
     render() {
         const { showTooltip, x, y} = this.state
+        const points = dataToPoints({ data: sampleData, limit: 0, width: 240, height: 40, margin: 10 });
         return (
             <div style={{position: 'relative'}}>
-                <Sparklines data={sampleData} style={{background: '#ccc'}} margin={10} height={40}>
+                <Sparklines points={points} style={{background: '#ccc'}} margin={10} height={40}>
                     <SparklinesLine style={{ stroke: 'white', fill: 'none' }} />
                 </Sparklines>
-                <SparklinesExternalInteractiveLayer data={sampleData}  margin={10} height={40} svgHeight={80} style={{cursor: 'pointer', position: "absolute", left: 0, top: 0}} onMouseMove={this.onMouseMove} onMouseLeave={this.onMouseLeave}/>
+                <SparklinesExternalInteractiveLayer points={points} margin={10} height={40} svgHeight={80} style={{cursor: 'pointer', position: "absolute", left: 0, top: 0}} onMouseMove={this.onMouseMove} onMouseLeave={this.onMouseLeave}/>
                 <Tooltip showTooltip={showTooltip} x={x} y={y}/>
             </div>
         )

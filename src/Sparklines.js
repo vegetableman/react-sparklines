@@ -42,11 +42,14 @@ class Sparklines extends PureComponent {
     }
 
     render() {
-        const {  data, limit, width, height, svgWidth, svgHeight, preserveAspectRatio, margin, style, max, min} = this.props;
+        const {  data, limit, width, height, svgWidth, svgHeight, preserveAspectRatio, margin, style, max, min } = this.props;
+        let { points } = this.props;
 
-        if (data.length === 0) return null;
+        if (!points && data.length === 0) return null;
 
-        const points = dataToPoints({ data, limit, width, height, margin, max, min });
+        if (!points) {
+            points = points || dataToPoints({ data, limit, width, height, margin, max, min });
+        }
 
         const svgOpts = { style: style, viewBox: `0 0 ${width} ${height}`, preserveAspectRatio: preserveAspectRatio };
         if (svgWidth > 0) svgOpts.width = svgWidth;
@@ -64,4 +67,4 @@ class Sparklines extends PureComponent {
     }
 }
 
-export { Sparklines, SparklinesLine, SparklinesCurve, SparklinesBars, SparklinesSpots, SparklinesReferenceLine, SparklinesNormalBand, SparklinesText, SparklinesInteractiveLayer, SparklinesExternalInteractiveLayer }
+export { Sparklines, SparklinesLine, SparklinesCurve, SparklinesBars, SparklinesSpots, SparklinesReferenceLine, SparklinesNormalBand, SparklinesText, SparklinesInteractiveLayer, SparklinesExternalInteractiveLayer,  dataToPoints}
