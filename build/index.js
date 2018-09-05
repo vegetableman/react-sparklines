@@ -2445,6 +2445,10 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _debounce = __webpack_require__(29);
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2550,15 +2554,6 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       };
     };
 
-    _this3.onMouseLeave = function () {
-      if (_this3.state.isActive) {
-        return;
-      }
-
-      _this3.setState({ cx: offscreen, cy: offscreen });
-      _this3.props.onMouseLeave();
-    };
-
     _this3.onClick = function () {
       _this3.setState(function (prevState) {
         return { isActive: !prevState.isActive };
@@ -2570,10 +2565,22 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       cy: offscreen,
       isActive: false
     };
+    _this3.onMouseLeave = _this3.onMouseLeave.bind(_this3);
+    _this3.debouncedMouseLeave = (0, _debounce2.default)(_this3.onMouseLeave, props.debounceTime);
     return _this3;
   }
 
   _createClass(SparklinesExternalInteractiveLayer, [{
+    key: 'onMouseLeave',
+    value: function onMouseLeave() {
+      if (this.state.isActive) {
+        return;
+      }
+
+      this.setState({ cx: offscreen, cy: offscreen });
+      this.props.onMouseLeave();
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.rectWidth = this.rect.getBoundingClientRect().width;
@@ -2627,7 +2634,7 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
           width: width,
           style: _extends({ fill: 'transparent', stroke: 'transparent' }, style),
           onMouseMove: this.onMouseMove(points, width),
-          onMouseLeave: this.onMouseLeave,
+          onMouseLeave: this.debouncedMouseLeave,
           onClick: this.onClick
         })
       );
@@ -2653,9 +2660,86 @@ SparklinesExternalInteractiveLayer.defaultProps = {
   width: 240,
   height: 60,
   preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
-  margin: 2
+  margin: 2,
+  debounceTime: 0
 };
 exports.default = SparklinesExternalInteractiveLayer;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing. The function also has a property 'clear' 
+ * that is a function which will clear the timer to prevent previously scheduled executions. 
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = Date.now() - timestamp;
+
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+    }
+  };
+
+  var debounced = function(){
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
+
+  debounced.clear = function() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+  
+  debounced.flush = function() {
+    if (timeout) {
+      result = func.apply(context, args);
+      context = args = null;
+      
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+
+  return debounced;
+};
+
+// Adds compatibility for ES modules
+debounce.debounce = debounce;
+
+module.exports = debounce;
+
 
 /***/ })
 /******/ ]);

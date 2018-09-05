@@ -1,6 +1,7 @@
 import dataToPoints from './dataProcessing/dataToPoints';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import debounce from 'debounce';
 
 class Spot extends PureComponent {
 	static defaultProps = {
@@ -44,7 +45,8 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
     width: 240,
     height: 60,
     preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
-    margin: 2
+    margin: 2,
+    debounceTime: 0
   };
 
   constructor(props) {
@@ -54,6 +56,8 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
       cy: offscreen,
       isActive: false
     }
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.debouncedMouseLeave = debounce(this.onMouseLeave, props.debounceTime);
   }
 
   onMouseMove = (datapoints, width) => {
@@ -101,7 +105,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
     })
   }
 
-  onMouseLeave = () => {
+  onMouseLeave() {
     if (this.state.isActive) {
       return;
     }
@@ -144,7 +148,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
 	        width={width}
 	        style={{fill: 'transparent', stroke: 'transparent', ...style}}
 	        onMouseMove={this.onMouseMove(points, width)}
-	        onMouseLeave={this.onMouseLeave}
+	        onMouseLeave={this.debouncedMouseLeave}
 	        onClick={this.onClick}
 	      />
       </svg>
