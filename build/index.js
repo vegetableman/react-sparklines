@@ -2586,6 +2586,11 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       this.rectWidth = this.rect.getBoundingClientRect().width;
     }
   }, {
+    key: 'setPosition',
+    value: function setPosition(cx, cy) {
+      this.setState({ cx: cx, cy: cy });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this4 = this;

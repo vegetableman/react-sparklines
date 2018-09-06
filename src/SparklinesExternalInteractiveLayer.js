@@ -124,6 +124,10 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
     this.rectWidth = this.rect.getBoundingClientRect().width
   }
 
+  setPosition(cx, cy) {
+  	this.setState({cx, cy})
+  }
+
   render() {
     const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, cursorStyle, spotStyle, spotRadius, cyOffset } = this.props;
 
