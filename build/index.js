@@ -2467,9 +2467,14 @@ var Spot = function (_PureComponent) {
   }
 
   _createClass(Spot, [{
-    key: 'render',
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('circle', { cx: this.props.cx, cy: this.props.cy + this.props.cyOffset, r: this.props.spotRadius, style: _extends({}, this.props.style) });
+      return _react2.default.createElement("circle", {
+        cx: this.props.cx,
+        cy: this.props.cy + this.props.cyOffset,
+        r: this.props.spotRadius,
+        style: _extends({}, this.props.style)
+      });
     }
   }]);
 
@@ -2491,9 +2496,15 @@ var Cursor = function (_PureComponent2) {
   }
 
   _createClass(Cursor, [{
-    key: 'render',
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('line', { x1: this.props.x1, x2: this.props.x2, y1: 0, y2: this.props.height, style: _extends({ strokeWidth: 1, stroke: "red" }, this.props.style) });
+      return _react2.default.createElement("line", {
+        x1: this.props.x1,
+        x2: this.props.x2,
+        y1: 0,
+        y2: this.props.height,
+        style: _extends({ strokeWidth: 1, stroke: "red" }, this.props.style)
+      });
     }
   }]);
 
@@ -2550,7 +2561,7 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
         var y = currentDataPoint.y;
 
         _this3.setState({ cx: x, cy: y });
-        _this3.props.onMouseMove(currentDataPoint, Math.max(0, pointIndex - 1), event.nativeEvent.offsetX, event.nativeEvent.offsetY);
+        _this3.props.onMouseMove(currentDataPoint, Math.max(0, pointIndex - 1), x, y, _this3.rect.getBoundingClientRect().left);
       };
     };
 
@@ -2571,7 +2582,7 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
   }
 
   _createClass(SparklinesExternalInteractiveLayer, [{
-    key: 'onMouseLeave',
+    key: "onMouseLeave",
     value: function onMouseLeave() {
       if (this.state.isActive) {
         return;
@@ -2581,17 +2592,17 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
       this.props.onMouseLeave();
     }
   }, {
-    key: 'componentDidMount',
+    key: "componentDidMount",
     value: function componentDidMount() {
       this.rectWidth = this.rect.getBoundingClientRect().width;
     }
   }, {
-    key: 'setPosition',
+    key: "setPosition",
     value: function setPosition(cx, cy) {
       this.setState({ cx: cx, cy: cy });
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this4 = this;
 
@@ -2623,21 +2634,31 @@ var SparklinesExternalInteractiveLayer = function (_PureComponent3) {
           cx = _state.cx,
           cy = _state.cy;
 
-      var svgOpts = { style: style, viewBox: '0 0 ' + width + ' ' + svgHeight, preserveAspectRatio: preserveAspectRatio };
+      var svgOpts = {
+        style: style,
+        viewBox: "0 0 " + width + " " + svgHeight,
+        preserveAspectRatio: preserveAspectRatio
+      };
       if (svgWidth > 0) svgOpts.width = svgWidth;
 
       return _react2.default.createElement(
-        'svg',
+        "svg",
         svgOpts,
-        _react2.default.createElement(Spot, { cx: cx, cy: cy, style: spotStyle, spotRadius: spotRadius, cyOffset: cyOffset }),
+        _react2.default.createElement(Spot, {
+          cx: cx,
+          cy: cy,
+          style: spotStyle,
+          spotRadius: spotRadius,
+          cyOffset: cyOffset
+        }),
         _react2.default.createElement(Cursor, { x1: cx, x2: cx, height: svgHeight, style: cursorStyle }),
-        _react2.default.createElement('rect', {
+        _react2.default.createElement("rect", {
           ref: function ref(_ref) {
             _this4.rect = _ref;
           },
           height: svgHeight,
           width: width,
-          style: _extends({ fill: 'transparent', stroke: 'transparent' }, style),
+          style: _extends({ fill: "transparent", stroke: "transparent" }, style),
           onMouseMove: this.onMouseMove(points, width),
           onMouseLeave: this.debouncedMouseLeave,
           onClick: this.onClick
@@ -2664,7 +2685,7 @@ SparklinesExternalInteractiveLayer.defaultProps = {
   data: [],
   width: 240,
   height: 60,
-  preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
+  preserveAspectRatio: "none", //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
   margin: 2,
   debounceTime: 0
 };

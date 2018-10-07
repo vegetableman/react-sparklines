@@ -1,40 +1,50 @@
-import dataToPoints from './dataProcessing/dataToPoints';
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import debounce from 'debounce';
+import dataToPoints from "./dataProcessing/dataToPoints";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import debounce from "debounce";
 
 class Spot extends PureComponent {
-	static defaultProps = {
-		spotRadius: 2,
-		cyOffset: 0
-	}
-  
+  static defaultProps = {
+    spotRadius: 2,
+    cyOffset: 0
+  };
+
   render() {
     return (
-      <circle cx={this.props.cx} cy={this.props.cy + this.props.cyOffset} r={this.props.spotRadius} style={{...this.props.style}}/>
-    )
+      <circle
+        cx={this.props.cx}
+        cy={this.props.cy + this.props.cyOffset}
+        r={this.props.spotRadius}
+        style={{ ...this.props.style }}
+      />
+    );
   }
 }
 
 class Cursor extends PureComponent {
   render() {
     return (
-      <line x1={this.props.x1} x2={this.props.x2} y1={0} y2={this.props.height} style={{strokeWidth: 1, stroke: "red", ...this.props.style}}/>
-    )
+      <line
+        x1={this.props.x1}
+        x2={this.props.x2}
+        y1={0}
+        y2={this.props.height}
+        style={{ strokeWidth: 1, stroke: "red", ...this.props.style }}
+      />
+    );
   }
 }
 
-const offscreen = -1000
+const offscreen = -1000;
 
 class SparklinesExternalInteractiveLayer extends PureComponent {
-
   static propTypes = {
     points: PropTypes.arrayOf(PropTypes.object),
     height: PropTypes.number,
     width: PropTypes.number,
     onMouseMove: PropTypes.func,
     onMouseLeave: PropTypes.func,
-    onClick: PropTypes.func,
+    onClick: PropTypes.func
   };
 
   static defaultProps = {
@@ -44,7 +54,7 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
     data: [],
     width: 240,
     height: 60,
-    preserveAspectRatio: 'none', //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
+    preserveAspectRatio: "none", //https://www.w3.org/TR/SVG/coords.html#PreserveAspectRatioAttribute
     margin: 2,
     debounceTime: 0
   };
@@ -55,21 +65,23 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
       cx: offscreen,
       cy: offscreen,
       isActive: false
-    }
+    };
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.debouncedMouseLeave = debounce(this.onMouseLeave, props.debounceTime);
   }
 
   onMouseMove = (datapoints, width) => {
-    const lastItemIndex = datapoints[datapoints.length - 1]
-    return ((event) => {
+    const lastItemIndex = datapoints[datapoints.length - 1];
+    return event => {
       if (this.state.isActive) {
         return;
       }
-      
-      const mouseX = Math.floor(event.nativeEvent.offsetX/(this.rectWidth/width));
-      
-      let pointIndex = 0
+
+      const mouseX = Math.floor(
+        event.nativeEvent.offsetX / (this.rectWidth / width)
+      );
+
+      let pointIndex = 0;
       let nextDataPoint = datapoints.find(entry => {
         const match = entry.x >= mouseX;
         if (match && !pointIndex) {
@@ -78,7 +90,6 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
         pointIndex = pointIndex + 1;
         return match;
       });
-
 
       if (!nextDataPoint) {
         nextDataPoint = datapoints[lastItemIndex];
@@ -89,8 +100,10 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
       let halfway;
 
       if (previousDataPoint) {
-        halfway = previousDataPoint.x + ((nextDataPoint.x - previousDataPoint.x) / 2);
-        currentDataPoint = mouseX >= halfway ? nextDataPoint : previousDataPoint;
+        halfway =
+          previousDataPoint.x + (nextDataPoint.x - previousDataPoint.x) / 2;
+        currentDataPoint =
+          mouseX >= halfway ? nextDataPoint : previousDataPoint;
       } else {
         currentDataPoint = nextDataPoint;
       }
@@ -101,9 +114,15 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
       const y = currentDataPoint.y;
 
       this.setState({ cx: x, cy: y });
-      this.props.onMouseMove(currentDataPoint, Math.max(0, pointIndex - 1), event.nativeEvent.offsetX, event.nativeEvent.offsetY)
-    })
-  }
+      this.props.onMouseMove(
+        currentDataPoint,
+        Math.max(0, pointIndex - 1),
+        x,
+        y,
+        this.rect.getBoundingClientRect().left
+      );
+    };
+  };
 
   onMouseLeave() {
     if (this.state.isActive) {
@@ -115,50 +134,79 @@ class SparklinesExternalInteractiveLayer extends PureComponent {
   }
 
   onClick = () => {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return { isActive: !prevState.isActive };
     });
-  }
+  };
 
   componentDidMount() {
-    this.rectWidth = this.rect.getBoundingClientRect().width
+    this.rectWidth = this.rect.getBoundingClientRect().width;
   }
 
   setPosition(cx, cy) {
-  	this.setState({cx, cy})
+    this.setState({ cx, cy });
   }
 
   render() {
-    const { height, limit, width, data, style, margin, max, min, preserveAspectRatio, svgWidth, svgHeight, cursorStyle, spotStyle, spotRadius, cyOffset } = this.props;
+    const {
+      height,
+      limit,
+      width,
+      data,
+      style,
+      margin,
+      max,
+      min,
+      preserveAspectRatio,
+      svgWidth,
+      svgHeight,
+      cursorStyle,
+      spotStyle,
+      spotRadius,
+      cyOffset
+    } = this.props;
 
-		let { points } = this.props;
+    let { points } = this.props;
     if (!points && data.length === 0) return null;
 
     if (!points) {
-        points = points || dataToPoints({ data, limit, width, height, margin, max, min });
+      points =
+        points ||
+        dataToPoints({ data, limit, width, height, margin, max, min });
     }
-    
+
     const { cx, cy } = this.state;
-    const svgOpts = { style: style, viewBox: `0 0 ${width} ${svgHeight}`, preserveAspectRatio: preserveAspectRatio };
+    const svgOpts = {
+      style: style,
+      viewBox: `0 0 ${width} ${svgHeight}`,
+      preserveAspectRatio: preserveAspectRatio
+    };
     if (svgWidth > 0) svgOpts.width = svgWidth;
 
     return (
-    	<svg {...svgOpts}>
-	      <Spot cx={cx} cy={cy} style={spotStyle} spotRadius={spotRadius} cyOffset={cyOffset}/>
-	      <Cursor x1={cx} x2={cx} height={svgHeight} style={cursorStyle}/>
-	      <rect
-	        ref={((_ref) => {this.rect = _ref})}
-	        height={svgHeight}
-	        width={width}
-	        style={{fill: 'transparent', stroke: 'transparent', ...style}}
-	        onMouseMove={this.onMouseMove(points, width)}
-	        onMouseLeave={this.debouncedMouseLeave}
-	        onClick={this.onClick}
-	      />
+      <svg {...svgOpts}>
+        <Spot
+          cx={cx}
+          cy={cy}
+          style={spotStyle}
+          spotRadius={spotRadius}
+          cyOffset={cyOffset}
+        />
+        <Cursor x1={cx} x2={cx} height={svgHeight} style={cursorStyle} />
+        <rect
+          ref={_ref => {
+            this.rect = _ref;
+          }}
+          height={svgHeight}
+          width={width}
+          style={{ fill: "transparent", stroke: "transparent", ...style }}
+          onMouseMove={this.onMouseMove(points, width)}
+          onMouseLeave={this.debouncedMouseLeave}
+          onClick={this.onClick}
+        />
       </svg>
-    )
+    );
   }
 }
-
 
 export default SparklinesExternalInteractiveLayer;
